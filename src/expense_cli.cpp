@@ -3,6 +3,7 @@
 #include <functional>
 #include <iostream>
 #include "../include/expense_cli.hpp"
+#include "../include/expense_service.hpp"
 
 namespace tracker {
     int add_command(int, char **);
@@ -34,4 +35,58 @@ int tracker::handle_command(int argc, char **argv) {
         return 1;
     }
     return it->second(argc, argv);
+}
+
+int tracker::add_command(int argc, char **argv) {
+    if(argc != 6) {
+        std::cerr << "Invalid number of arguments for add command." << '\n'
+                  << "Usage: " << argv[0] << " add --description <description> --amount <amount>"
+                  << std::endl;
+        return 1;
+    }
+    std::string description {""};
+    double amount {0.0};
+    for(int i {2}; i < argc; ++i) {
+        std::string opt = argv[i];
+        if(i + 1 >= argc || (argv[i + 1][0] == '-' && argv[i + 1][1] == '-')) {
+            std::cerr << "Missing value for option: " << opt << std::endl;
+            return 1;
+        } else if(opt == "--description") {
+            description = argv[++i];
+        } else if(opt == "--amount") {
+            try {
+                amount = std::stod(argv[++i]);
+            } catch(const std::invalid_argument &e) {
+                std::cerr << "Invalid amount value: " << e.what() << std::endl;
+                return 1;
+            }
+        }
+    }
+    if(description.empty() || amount <= 0) {
+        std::cerr << "Invalid arguments for add command" << std::endl;
+        return 1;
+    }
+    try {
+        int id = add_expense(description, amount);
+        std::cout << "Expense added successfully (ID: " << id << ")" << std::endl;
+    } catch(const std::exception &e) {
+        std::cerr << "Error adding expense: " << e.what() << std::endl;
+        return 1;
+    }
+    return 0;
+}
+int tracker::list_command(int argc, char **argv) {
+    return 0;
+}
+int tracker::update_command(int argc, char **argv) {
+    return 0;
+}
+int tracker::delete_command(int argc, char **argv) {
+    return 0;
+}
+int tracker::summary_command(int argc, char **argv) {
+    return 0;
+}
+int tracker::print_help(int argc, char **argv) {
+    return 0;
 }
