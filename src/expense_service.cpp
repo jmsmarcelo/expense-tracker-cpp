@@ -15,3 +15,19 @@ int tracker::add_expense(const std::string &description, double amount) {
 std::vector<tracker::Expense> tracker::list_expenses() {
     return get_expenses_from_file();
 }
+bool tracker::update_expense(int id, const std::string &description, double amount) {
+    std::vector<Expense> expenses = get_expenses_from_file();
+    for(auto &expense: expenses) {
+        if(expense.id == id) {
+            if(!description.empty()) {
+                expense.description = description;
+            }
+            if(amount > 0) {
+                expense.amount = amount;
+            }
+            update_expense_file(expenses);
+            return true;
+        }
+    }
+    return false;
+}

@@ -52,15 +52,15 @@ int tracker::add_command(int argc, char **argv) {
     std::string description {""};
     double amount {0.0};
     for(int i {2}; i < argc; ++i) {
-        std::string opt = argv[i];
-        if(i + 1 >= argc || (argv[i + 1][0] == '-' && argv[i + 1][1] == '-')) {
+        std::string opt = argv[i++];
+        if(i >= argc || (argv[i][0] == '-' && argv[i][1] == '-')) {
             std::cerr << "Missing value for option: " << opt << std::endl;
             return 1;
         } else if(opt == "--description") {
-            description = argv[++i];
+            description = argv[i];
         } else if(opt == "--amount") {
             try {
-                amount = std::stod(argv[++i]);
+                amount = std::stod(argv[i]);
             } catch(const std::invalid_argument &e) {
                 std::cerr << "Invalid amount value: " << e.what() << std::endl;
                 return 1;
@@ -95,6 +95,61 @@ int tracker::list_command(int argc, char **argv) {
     return 0;
 }
 int tracker::update_command(int argc, char **argv) {
+    if(argc < 6 || argc > 8 || argc == 7) {
+        std::cerr << "Ivalid number of arguments for update command" << '\n'
+                  << "Usage: " << argv[0] << " update --id <id> [--description <description>] [--amount <amount>]"
+                  << std::endl;
+        return 1;
+    }
+    int id {0};
+    std::string description {""};
+    double amount {0.0};
+    for(int i {2}; i < argc; ++i) {
+        std::string opt = argv[i];
+        std::string value = argv[++i];
+        if(i >= argc || (value[0] == '-' && value[1] == '-')) {
+            std::cerr << "Missing value for option" << std::endl;
+            return 1;
+        } else if(opt == "--id") {
+            try {
+                id = std::stoi(value);
+            } catch(const std::invalid_argument &e) {
+                std::cerr << "Invalid ID value: " << e.what() << std::endl;
+                return 1;
+            }
+        } else if(opt == "--description") {
+            description = value;
+        } else if(opt == "--amount") {
+            try {
+                amount = std::stod(value);
+            } catch(const std::invalid_argument &e) {
+                std::cerr << "Invalid amount value: " << e.what() << std::endl;
+                return 1;
+            }
+        } else {
+            std::cerr << "Invalid option: " << opt << std::endl;
+            return 1;
+        }
+    }
+    if(id <= 0) {
+        std::cerr << "Invalid ID value: " << id << std::endl;
+        return 1;
+    }
+    if(description.empty() && amount <= 0) {
+        std::cerr << "Invalid Description and Amount value" << std::endl;
+        return 1;
+    }
+    try {
+        if(update_expense(id, description, amount)) {
+            std::cout << "Expense uppdated successfully" << std::endl;
+        } else {
+            std::cerr << "Expense ID not found for updating" << std::endl;
+            return 1;
+        }
+    } catch(const std::exception &e) {
+        std::cerr << "Error updating expense: " << e.what() << std::endl;
+        return 1;
+    }
     return 0;
 }
 int tracker::delete_command(int argc, char **argv) {
@@ -121,7 +176,8 @@ void tracker::print_expenses(const std::vector<Expense> &expenses) {
               << set_text_wwidth("Description", max_description_width, 'c') << ' '
               << set_text_wwidth("Amount", max_amount_width, 'c') << std::endl;
     if(expenses.empty()) {
-        std::cout << set_text_wwidth("No expenses found", (10 + max_id_width + max_description_width + max_amount_width));
+        std::cout << set_text_wwidth("No expenses found", (10 + max_id_width + max_description_width + max_amount_width))
+                  << std::endl;
         return;
     }
     for(const auto &expense: expenses) {
@@ -155,7 +211,7 @@ std::string tracker::set_text_wwidth(const std::string &str, size_t width, char 
         left_padding = padding;
     } else if(align == 'c') {
         left_padding = padding / 2;
-        right_padding = padding = left_padding;
+        right_padding = padding - left_padding;
     }
     return std::string(left_padding, ' ') + str + std::string(right_padding, ' ');
 }

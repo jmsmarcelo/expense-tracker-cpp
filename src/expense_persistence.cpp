@@ -54,6 +54,16 @@ std::vector<tracker::Expense> tracker::get_expenses_from_file() {
     }
     return expenses;
 }
+void tracker::update_expense_file(std::vector<tracker::Expense> &expenses) {
+    std::ofstream file(EXPENSE_DATA_FILE);
+    if(file.is_open()) {
+        file << EXPENSE_DATA_HEADER;
+        for(auto &expense: expenses) {
+            file << expense_to_string(expense);
+        }
+        file.close();
+    }
+}
 std::string tracker::expense_to_string(Expense &expense) {
     return std::to_string(expense.id) + "," + expense.date + ",\""
            + expense.description + "\"," + format_currency(expense.amount)

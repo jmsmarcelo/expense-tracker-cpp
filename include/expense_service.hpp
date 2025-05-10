@@ -8,6 +8,7 @@
 namespace tracker {
     int add_expense(const std::string &, double);
     std::vector<Expense> list_expenses();
+    bool update_expense(int, const std::string &, double);
 }
 
 #endif
