@@ -12,3 +12,6 @@ int tracker::add_expense(const std::string &description, double amount) {
     add_expense_to_file(expense);
     return expense.id;
 }
+std::vector<tracker::Expense> tracker::list_expenses() {
+    return get_expenses_from_file();
+}
