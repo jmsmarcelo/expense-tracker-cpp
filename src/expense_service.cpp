@@ -31,3 +31,14 @@ bool tracker::update_expense(int id, const std::string &description, double amou
     }
     return false;
 }
+bool tracker::delete_expense(int id) {
+    std::vector<Expense> expenses = get_expenses_from_file();
+    for(auto it = expenses.begin(); it != expenses.end(); ++it) {
+        if(it->id == id) {
+            expenses.erase(it);
+            update_expense_file(expenses);
+            return true;
+        }
+    }
+    return false;
+}

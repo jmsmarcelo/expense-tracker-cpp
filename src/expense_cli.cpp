@@ -153,6 +153,32 @@ int tracker::update_command(int argc, char **argv) {
     return 0;
 }
 int tracker::delete_command(int argc, char **argv) {
+    if(argc != 4) {
+        std::cerr << "Invalid number of arguments for delete command. " << '\n'
+                  << "Usage: " << argv[0] << " delete --id <id>" << std::endl;
+        return 1;
+    }
+    if(std::string(argv[2]) != "--id") {
+        std::cerr << "Invalid option for delete command. Use 'help' for list command" << std::endl;
+        return 1;
+    }
+    int id = 0;
+    try {
+        id = std::stoi(argv[3]);
+    } catch(const std::invalid_argument &e) {
+        std::cerr << "Invalid ID value: " << e.what() << std::endl;
+        return 1;
+    }
+    if(id <= 0) {
+        std::cerr << "Invalid ID value" << std::endl;
+        return 1;
+    }
+    if(delete_expense(id)) {
+        std::cout << "Expense deleted succerrfully" << std::endl;
+    } else {
+        std::cerr << "Expense ID not found for deleting" << std::endl;
+        return 1;
+    }
     return 0;
 }
 int tracker::summary_command(int argc, char **argv) {
