@@ -10,6 +10,11 @@ std::string tracker::get_today(const char *format) {
     auto ltm = get_current_time();
     return format_tm(format, ltm);
 }
+std::string tracker::get_month(int month, const char *format) {
+    auto ltm = get_current_time();
+    ltm->tm_mon = month - 1;
+    return format_tm(format, ltm);
+}
 tm *tracker::get_current_time() {
     time_t now = time(0);
     return localtime(&now);

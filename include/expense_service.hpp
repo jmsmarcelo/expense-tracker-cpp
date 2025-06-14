@@ -10,6 +10,7 @@ namespace tracker {
     std::vector<Expense> list_expenses();
     bool update_expense(int, const std::string &, double);
     bool delete_expense(int);
+    double get_summary(int month = -1);
 }
 
 #endif

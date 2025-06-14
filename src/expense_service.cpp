@@ -42,3 +42,15 @@ bool tracker::delete_expense(int id) {
     }
     return false;
 }
+double tracker::get_summary(int month) {
+    std::string year;
+    if(month == -1) year = get_today().substr(0, 4);
+    std::vector<Expense> expenses = get_expenses_from_file();
+    double total {0.0};
+    for(const auto &expense: expenses) {
+        if(month == -1 || expense.date.substr(0, 7) == get_month(month)) {
+            total += expense.amount;
+        }
+    }
+    return total;
+}

@@ -174,7 +174,7 @@ int tracker::delete_command(int argc, char **argv) {
         return 1;
     }
     if(delete_expense(id)) {
-        std::cout << "Expense deleted succerrfully" << std::endl;
+        std::cout << "Expense deleted successfully" << std::endl;
     } else {
         std::cerr << "Expense ID not found for deleting" << std::endl;
         return 1;
@@ -182,6 +182,44 @@ int tracker::delete_command(int argc, char **argv) {
     return 0;
 }
 int tracker::summary_command(int argc, char **argv) {
+    if(argc > 4 || argc == 3) {
+        std::cerr << "Invalid number of arguments for summary command" << '\n'
+                  << "Usage: " << argv[0] << " summary [--month <month>]" << std::endl;
+        return 1;
+    }
+    double total {0.0};
+    int month {-1};
+    if(argc == 4) {
+        if(std::string(argv[2]) != "--month") {
+            std::cerr << "Invalid option for summary command. Use 'help' for list command" << std::endl;
+            return 1;
+        }
+        try {
+            month = std::stoi(argv[3]);
+        } catch(const std::invalid_argument &e) {
+            std::cerr << "Invalid month value: " << e.what() << std::endl;
+            return 1;
+        }
+        if(month < 1 || month > 12) {
+            std::cerr << "Invalid month value" << std::endl;
+            return 1;
+        }
+        if(month > std::stoi(get_today().substr(5, 2))) {
+            std::cerr << "Invalid month for current year" << std::endl;
+            return 1;
+        }
+    }
+    try {
+        total = get_summary(month);
+    } catch(const std::exception &e) {
+        std::cerr << "Error getting summary: " << e.what() << std::endl;
+        return 1;
+    }
+    if(month == -1) {
+        std::cout << "Total expenses: $" << format_currency(total) << std::endl;
+    } else {
+        std::cout << "Total expenses for " << get_month(month, "%B") << ": $" << format_currency(total) << std::endl;
+    }
     return 0;
 }
 int tracker::print_help(int argc, char **argv) {
