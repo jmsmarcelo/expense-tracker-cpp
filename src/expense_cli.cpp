@@ -223,6 +223,35 @@ int tracker::summary_command(int argc, char **argv) {
     return 0;
 }
 int tracker::print_help(int argc, char **argv) {
+    if(argc != 2) {
+        std::cerr << "Invalid number of arguments for help command" << '\n'
+                  << "Usage: " << argv[0] << " help" << std::endl;
+        return 1;
+    }
+    const std::string app_name = argv[0];
+    std::cout << "Usage: " << app_name << " <command> [<options>]" << "\n\n";
+    std::cout << "Commands:" << '\n';
+    std::cout << "  add             Add a new expense" << '\n';
+    std::cout << "  list            List all expenses" << '\n';
+    std::cout << "  update          Update description and/or amount an expense by ID" << '\n';
+    std::cout << "  delete          Delete an expense by ID" << '\n';
+    std::cout << "  summary         Show summary of expenses" << '\n';
+    std::cout << "  help            Show this help message" << "\n\n";
+    std::cout << "Options:" << '\n';
+    std::cout << "  --id            Specify the ID for update/delete an expense" << '\n';
+    std::cout << "  --description   Specify the description for add/update an expense" << '\n';
+    std::cout << "  --amount        Specify the amount for add/update an expense" << '\n';
+    std::cout << "  --month         Sppecify the month of current year for the summary" << "\n\n";
+    std::cout << "Examples:" << '\n';
+    std::cout << "  " << app_name << " add --description \"Lunch\" --amount 20" << '\n';
+    std::cout << "  " << app_name << " add --amount 10 --description \"Dinner\"" << '\n';
+    std::cout << "  " << app_name << " list" << '\n';
+    std::cout << "  " << app_name << " update --id 1 --description \"Lunch updated\" --amount 25" << '\n';
+    std::cout << "  " << app_name << " update --id 1 --description \"Lunch updated\"" << '\n';
+    std::cout << "  " << app_name << " update --id 1 --amount 25" << '\n';
+    std::cout << "  " << app_name << " delete --id 2" << '\n';
+    std::cout << "  " << app_name << " summary" << '\n';
+    std::cout << "  " << app_name << " summary --month 8" << std::endl;
     return 0;
 }
 
