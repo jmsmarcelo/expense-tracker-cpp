@@ -1,7 +1,7 @@
 # Expense Tracker CLI
 
 A simple expense tracker application to manage your finances.
-This project is [my solution]() to the [Roadmap Expense Tracker Challenge](https://roadmap.sh/projects/expense-tracker).
+This project is [my solution](https://roadmap.sh/projects/expense-tracker/solutions?u=66f7e663c45e253cb00d6b67) to the [Roadmap Expense Tracker Challenge](https://roadmap.sh/projects/expense-tracker).
 
 It allows you to add, list, update, delete, and summarize expenses directly from the terminal.
 
@@ -136,10 +136,11 @@ Contributions are welcome!
 
 *Watch the full development process of this project on YouTube:*
 
-[![Expense Tracker CLI Demo](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://www.youtube.com/watch?v=VIDEO_ID)
+[![Expense Tracker CLI Demo](https://img.youtube.com/vi/WEZZXSLoc_g/0.jpg)](https://youtu.be/WEZZXSLoc_g)
 
 ## 🖼️ Screenshots
 
+![Screenshot from 2025-06-21 11-27-24](https://github.com/user-attachments/assets/a11a9b4e-e146-49e5-a9b1-f56f460b9988)
 
 ## 📜 License
 
